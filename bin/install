@@ -64,14 +64,13 @@ function getURLMatchingEngine(engine, callback) {
             url: 'https://raw.githubusercontent.com/Microsoft/sqlopsstudio/master/src/sql/sqlops.d.ts',
             version: '*'
         });
-    } else {
+    } /*else {
         return callback(null, {
             url: `https://raw.githubusercontent.com/Microsoft/sqlopsstudio/${engine}/src/sql/sqlops.d.ts`,
             version: '*'
         });
-    }
-    /*
-    shared.getContents('https://vscode-update.azurewebsites.net/api/releases/stable', null, { "X-API-Version": "2" }, function (error, tagsRaw) {
+    }*/
+    shared.getContents('https://azuredatastudio-update.azurewebsites.net/api/releases/stable', null, { "X-API-Version": "2" }, function (error, tagsRaw) {
         if (error) {
             exitWithError(error);
         }
@@ -95,7 +94,7 @@ function getURLMatchingEngine(engine, callback) {
 
         // check if master is on the version specified
         if (!tag) {
-            return shared.getContents('https://raw.githubusercontent.com/Microsoft/vscode/master/package.json', process.env.GITHUB_TOKEN, null, function (error, packageJson) {
+            return shared.getContents('https://raw.githubusercontent.com/Microsoft/azuredatastudio/master/package.json', process.env.GITHUB_TOKEN, null, function (error, packageJson) {
                 if (error) {
                     exitWithError(error);
                 }
@@ -104,23 +103,22 @@ function getURLMatchingEngine(engine, callback) {
                 if (semver.satisfies(version, engine)) {
                     // master
                     return callback(null, {
-                        url: 'https://raw.githubusercontent.com/Microsoft/vscode/master/src/vs/vscode.d.ts',
+                        url: 'https://raw.githubusercontent.com/Microsoft/azuredatastudio/master/src/sql/sqlops.d.ts',
                         version: version
                     });
                 }
 
-                exitWithError('Could not find satifying VSCode for version ' + engine + ' in the tags: [' + tags.join(', ') + '] or on master: ' + version);
+                exitWithError('Could not find satifying Azure Data Studio for version ' + engine + ' in the tags: [' + tags.join(', ') + '] or on master: ' + version);
             });
         }
 
         console.log('Found minimal version that qualifies engine range: ' + tag);
 
         return callback(null, {
-            url: 'https://raw.githubusercontent.com/Microsoft/vscode/' + mapTagsToCommits[tag] + '/src/vs/vscode.d.ts',
+            url: 'https://raw.githubusercontent.com/Microsoft/azuredatastudio/' + mapTagsToCommits[tag] + '/src/sql/sqlops.d.ts',
             version: tag
         });
     });
-    */
 }
 
 function minSatisfying(versions, range) {
