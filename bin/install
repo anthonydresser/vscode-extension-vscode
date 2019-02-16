@@ -30,32 +30,13 @@ getURLMatchingEngine(engine, function (_, data) {
             exitWithError(new Error('Could not find sqlops.d.ts at the provided URL. Please report this to https://github.com/Microsoft/sqlops/issues'));
         }
 
-        // if (data.version !== '*' && semver.lt(data.version, '1.7.0')) {
-        //     // Older versions of vscode.d.ts need a massage to play nice.
-        //     contents = sqlopsDtsToTypescript(contents);
-        // }
+        // we don't need massaging in any version of our .d.ts
 
         fs.writeFileSync(sqlopsDtsTypescriptPath, contents);
 
         console.log('sqlops.d.ts successfully installed!\n');
     });
 });
-
-function sqlopsDtsToTypescript(contents) {
-    var markerHit = false;
-    var lines = contents.split('\n').filter(function (line) {
-        if (!markerHit && (line === '// when used for JS*' || line === 'declare module \'sqlops\' {')) {
-            markerHit = true;
-        }
-
-        return !markerHit;
-    });
-
-    lines.unshift('/// <reference path="./thenable.d.ts" />');
-    lines.push('export = sqlops;'); // this is to enable TS module resolution support
-
-    return lines.join('\n');
-}
 
 function getURLMatchingEngine(engine, callback) {
     if (!engine || engine === '*') {
