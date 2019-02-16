@@ -30,10 +30,10 @@ getURLMatchingEngine(engine, function (_, data) {
             exitWithError(new Error('Could not find sqlops.d.ts at the provided URL. Please report this to https://github.com/Microsoft/sqlops/issues'));
         }
 
-        if (data.version !== '*' && semver.lt(data.version, '1.7.0')) {
-            // Older versions of vscode.d.ts need a massage to play nice.
-            contents = sqlopsDtsToTypescript(contents);
-        }
+        // if (data.version !== '*' && semver.lt(data.version, '1.7.0')) {
+        //     // Older versions of vscode.d.ts need a massage to play nice.
+        //     contents = sqlopsDtsToTypescript(contents);
+        // }
 
         fs.writeFileSync(sqlopsDtsTypescriptPath, contents);
 
