@@ -64,12 +64,8 @@ function getURLMatchingEngine(engine, callback) {
             url: 'https://raw.githubusercontent.com/Microsoft/sqlopsstudio/master/src/sql/sqlops.d.ts',
             version: '*'
         });
-    } /*else {
-        return callback(null, {
-            url: `https://raw.githubusercontent.com/Microsoft/sqlopsstudio/${engine}/src/sql/sqlops.d.ts`,
-            version: '*'
-        });
-    }*/
+    }
+
     shared.getContents('https://azuredatastudio-update.azurewebsites.net/api/releases/stable', null, { "X-API-Version": "2" }, function (error, tagsRaw) {
         if (error) {
             exitWithError(error);
@@ -108,7 +104,13 @@ function getURLMatchingEngine(engine, callback) {
                     });
                 }
 
-                exitWithError('Could not find satifying Azure Data Studio for version ' + engine + ' in the tags: [' + tags.join(', ') + '] or on master: ' + version);
+                // try just grabbing it from a branch
+                return callback(null, {
+                    url: 'https://raw.githubusercontent.com/Microsoft/sqlopsstudio/' + engine + '/src/sql/sqlops.d.ts',
+                    version: '*'
+                });
+
+                // exitWithError('Could not find satifying Azure Data Studio for version ' + engine + ' in the tags: [' + tags.join(', ') + '] or on master: ' + version);
             });
         }
 
