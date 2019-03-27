@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+const colors = require('colors');
+
+console.warn('This package has been depricated, please use https://github.com/Microsoft/azdata-extension-azdata instead.'.underline.red);
