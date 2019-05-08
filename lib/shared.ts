@@ -8,16 +8,6 @@ var request = require('request');
 var URL = require('url-parse');
 
 export function getContents(url, token, headers, callback) {
-    request.get(toRequestOptions(url, token, headers), function (error, response, body) {
-        if (!error && response && response.statusCode >= 400) {
-            error = new Error('Request returned status code: ' + response.statusCode + '\nDetails: ' + response.body);
-        }
-
-        callback(error, body);
-    });
-}
-
-export function toRequestOptions(url, token, headers) {
     headers = headers || {
         'user-agent': 'nodejs'
     };
@@ -41,9 +31,17 @@ export function toRequestOptions(url, token, headers) {
 
     if (process.env.npm_config_proxy && parsedUrl.protocol === 'http:') {
         options.proxy = process.env.npm_config_proxy;
-    } else if (process.env.npm_config_https_proxy && parsedUrl.protocol === 'https:') {
+    }
+
+    if (process.env.npm_config_https_proxy && parsedUrl.protocol === 'https:') {
         options.proxy = process.env.npm_config_https_proxy;
     }
 
-    return options;
+    request.get(options, function (error, response, body) {
+        if (!error && response && response.statusCode >= 400) {
+            error = new Error('Request returned status code: ' + response.statusCode + '\nDetails: ' + response.body);
+        }
+
+        callback(error, body);
+    });
 }
