@@ -4,10 +4,10 @@
 
 'use strict';
 
-var request = require('request');
-var URL = require('url-parse');
+const request = require('request');
+const URL = require('url-parse');
 
-export function getContents(url, token, headers, callback) {
+export function getContents(url, token, headers, callback): void {
     headers = headers || {
         'user-agent': 'nodejs'
     };
@@ -18,7 +18,7 @@ export function getContents(url, token, headers, callback) {
 
     let parsedUrl = new URL(url);
 
-    var options: any = {
+    const options: any = {
         url: url,
         headers: headers
     };
@@ -37,7 +37,7 @@ export function getContents(url, token, headers, callback) {
         options.proxy = process.env.npm_config_https_proxy;
     }
 
-    request.get(options, function (error, response, body) {
+    request.get(options, function (error, response, body): void {
         if (!error && response && response.statusCode >= 400) {
             error = new Error('Request returned status code: ' + response.statusCode + '\nDetails: ' + response.body);
         }
